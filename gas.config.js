@@ -291,8 +291,8 @@ const gasConfig = {
 
   backend: {
     supabase: {
-      url: "",
-      anonKey: "",
+      url: "https://jsccajimfgspkhmjzksp.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzY2NhamltZmdzcGtobWp6a3NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzQzNjcsImV4cCI6MjA5NzMxMDM2N30.zyxRPtKPztDhQmIf5x7COmCwbDUb5z3qrdny-SgHmoQ",
     },
   },
 

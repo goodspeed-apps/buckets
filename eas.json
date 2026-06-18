@@ -8,7 +8,16 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5"
+        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://jsccajimfgspkhmjzksp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzY2NhamltZmdzcGtobWp6a3NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzQzNjcsImV4cCI6MjA5NzMxMDM2N30.zyxRPtKPztDhQmIf5x7COmCwbDUb5z3qrdny-SgHmoQ",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "3fccc67a-c76d-453b-8281-c561eeb828cd",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "GAS_BUNDLE_ID": "app.goodspeed.buckets"
+      },
+      "ios": {
+        "credentialsSource": "local"
       }
     },
     "preview": {
@@ -20,14 +29,21 @@
         "simulator": false,
         "image": "macos-sequoia-15.6-xcode-26.2",
         "buildConfiguration": "Release",
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "credentialsSource": "local"
       },
       "android": {
         "resourceClass": "medium"
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "preview",
-        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5"
+        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://jsccajimfgspkhmjzksp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzY2NhamltZmdzcGtobWp6a3NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzQzNjcsImV4cCI6MjA5NzMxMDM2N30.zyxRPtKPztDhQmIf5x7COmCwbDUb5z3qrdny-SgHmoQ",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "3fccc67a-c76d-453b-8281-c561eeb828cd",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "GAS_BUNDLE_ID": "app.goodspeed.buckets"
       }
     },
     "preview-sim": {
@@ -35,7 +51,8 @@
       "channel": "preview",
       "node": "22.13.0",
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "credentialsSource": "local"
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "preview"
@@ -49,14 +66,21 @@
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2",
         "buildConfiguration": "Release",
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "credentialsSource": "local"
       },
       "android": {
         "resourceClass": "medium"
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "staging",
-        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5"
+        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://jsccajimfgspkhmjzksp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzY2NhamltZmdzcGtobWp6a3NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzQzNjcsImV4cCI6MjA5NzMxMDM2N30.zyxRPtKPztDhQmIf5x7COmCwbDUb5z3qrdny-SgHmoQ",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "3fccc67a-c76d-453b-8281-c561eeb828cd",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "GAS_BUNDLE_ID": "app.goodspeed.buckets"
       }
     },
     "production": {
@@ -66,14 +90,21 @@
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2",
         "buildConfiguration": "Release",
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "credentialsSource": "local"
       },
       "android": {
         "resourceClass": "medium"
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "production",
-        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5"
+        "EAS_PROJECT_ID": "89823a29-4927-427f-9892-e323a02403c5",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://jsccajimfgspkhmjzksp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzY2NhamltZmdzcGtobWp6a3NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzQzNjcsImV4cCI6MjA5NzMxMDM2N30.zyxRPtKPztDhQmIf5x7COmCwbDUb5z3qrdny-SgHmoQ",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "3fccc67a-c76d-453b-8281-c561eeb828cd",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "GAS_BUNDLE_ID": "app.goodspeed.buckets"
       }
     }
   },
