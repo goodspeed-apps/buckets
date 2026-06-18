@@ -90,7 +90,7 @@ export default function SignInScreen() {
             </Pressable>
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(150).duration(400)} style={{ gap: 12 }}>
+          <View style={{ gap: 12 }}>
             <Pressable onPress={handleGoogle} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 14, paddingVertical: 14, alignItems: 'center' }} accessibilityLabel="Sign in with Google" accessibilityHint="Authenticate using your Google account">
               <Text style={{ fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.text }}>Continue with Google</Text>
             </Pressable>
@@ -102,7 +102,7 @@ export default function SignInScreen() {
             <Pressable onPress={() => router.push('/(auth)/signup')} style={{ marginTop: 8, alignItems: 'center', minHeight: 44, justifyContent: 'center' }} accessibilityLabel="Create account" accessibilityHint="Navigate to the sign up screen">
               <Text style={{ fontSize: 14, fontFamily: 'Inter_400Regular', color: colors.textSecondary }}>{"Don't have an account? "}<Text style={{ color: colors.primary, fontFamily: 'PlusJakartaSans_700Bold' }}>Sign Up</Text></Text>
             </Pressable>
-          </Animated.View>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
