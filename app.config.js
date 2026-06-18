@@ -136,7 +136,7 @@ module.exports = ({ config: expoConfig }) => ({
   },
 web: {
     bundler: 'metro',
-    output: 'static',
+    output: 'single',
     // favicon intentionally omitted — gas-template does not ship one, and
     // pointing at a non-existent path makes expo export fail. The web
     // preview will use a default favicon; a real one can be added later.
