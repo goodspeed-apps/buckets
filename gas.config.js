@@ -180,7 +180,7 @@ const gasConfig = {
     },
     gamification: {
       enabled: false,
-      elements: null,
+      elements: [],
     },
     onboarding: {
       enabled: true,
@@ -258,7 +258,7 @@ const gasConfig = {
     showBuiltWithBadge: false,
   },
 
-navigation: {
+  navigation: {
     tabs: [
       {
         id: "dashboard",
@@ -287,6 +287,13 @@ navigation: {
     ],
     hiddenScreens: [],
     modals: ["paywall"],
+  },
+
+  backend: {
+    supabase: {
+      url: "",
+      anonKey: "",
+    },
   },
 
   releaseChannels: {
@@ -333,67 +340,8 @@ navigation: {
 
   growth: {
     experimentsEnabled: true,
-    defaultBackgroundSyncInterval: 60000,
-    referralCodeLength: 8,
-  },
-
-  media: {
-    provider: "supabase",
-    maxUploadBytes: 10485760,
-    allowedContentTypes: ["image/jpeg", "image/png", "image/webp"],
-    defaultBucket: "uploads",
-    maxImageEdge: 2048,
-    signedUrlTtlSeconds: 3600,
-  },
-
-  search: {
-    defaultLanguage: "en",
-    defaultLimit: 20,
-    maxLimit: 100,
-  },
-
-  realtime: {
-    presenceTimeoutMs: 30000,
-    autoReconnect: true,
-    defaultRetries: 3,
-  },
-
-  llm: {
-    provider: "anthropic",
-    defaultChatModel: "claude-opus-4-1",
-    defaultEmbedModel: "claude-3-5-sonnet-20241022",
-    defaultTranscribeModel: "whisper-1",
-    costScope: "monthly",
-    budgetPeriod: "month",
-  },
-
-  backend: {
-    supabase: {
-      url: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
-      anonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
-    },
-    revenuecat: {
-      iosKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? '',
-      androidKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID ?? '',
-    },
-    posthog: {
-      apiKey: process.env.EXPO_PUBLIC_POSTHOG_API_KEY ?? '',
-      host: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
-    },
-    telemetry: {
-      // EXPO_PUBLIC_TELEMETRY_INGEST_SECRET — ingest identity HMAC key. Public-bundle
-      // value, not an auth secret. TelemetryProvider reads .ingestSecret at module
-      // init; the field MUST be present (empty string is OK) or the React tree
-      // crashes on first mount. See gas-template GasBackendConfig.telemetry.
-      ingestSecret: process.env.EXPO_PUBLIC_TELEMETRY_INGEST_SECRET ?? '',
-    },
-    stripe: {
-      // Same always-emit pattern as telemetry: safe-off empty string at codegen,
-      // runtime decides whether to init Stripe based on marketplace.enabled.
-      publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
-    },
+    defaultBackgroundSyncIntervalMs: 60000,
   },
 };
 
 module.exports = { gasConfig };
-module.exports.default = gasConfig;
