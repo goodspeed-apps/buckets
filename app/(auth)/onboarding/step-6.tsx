@@ -23,9 +23,12 @@ export default function Step6() {
     trackScreenLoad('onboarding_step_6', startTime.current);
     (async () => {
       const answers = await getOnboardingAnswers();
-      setBucketName(answers.bucketName ?? 'Your Bucket');
-      setMonthly(answers.targetAmount ?? '0');
-      setTargetDate(answers.targetDate ?? '');
+      if (answers) {
+        const answersRecord = answers as Record<string, unknown>;
+        setBucketName((answersRecord['bucketName'] as string | undefined) ?? 'Your Bucket');
+        setMonthly((answersRecord['targetAmount'] as string | undefined) ?? '0');
+        setTargetDate((answersRecord['targetDate'] as string | undefined) ?? '');
+      }
       setTimeout(() => setSheetVisible(true), 800);
     })();
   }, []);
@@ -79,14 +82,14 @@ export default function Step6() {
             <Text style={s.cardSub}>{targetDate ? `Due ${targetDate}` : 'Ongoing'}</Text>
           </View>
           <View style={s.cardAmount}>
-            <Text style={s.amountNum}>${(parseFloat(monthly) ?? 0).toFixed(0)}</Text>
+            <Text style={s.amountNum}>${(parseFloat(monthly) || 0).toFixed(0)}</Text>
             <Text style={s.amountUnit}>/mo</Text>
           </View>
         </View>
 
         <View style={s.totalCard}>
           <Text style={s.totalLabel}>Monthly total</Text>
-          <Text style={s.totalAmount}>${(parseFloat(monthly) ?? 0).toFixed(0)}</Text>
+          <Text style={s.totalAmount}>${(parseFloat(monthly) || 0).toFixed(0)}</Text>
         </View>
 
         <Text style={s.nudge}>Create a free account to save your buckets and access them on any device.</Text>
@@ -103,69 +106,59 @@ export default function Step6() {
       </Pressable>
 
       <Modal visible={sheetVisible} transparent animationType="slide" onRequestClose={handleDismissSheet}>
-        <Pressable style={s.overlay} onPress={handleDismissSheet} accessibilityLabel="Dismiss">
-          <Animated.View entering={FadeInDown.duration(350)} style={s.sheet}>
-            <View style={s.sheetHandle} />
-            <Text style={s.sheetTitle}>Add more buckets?</Text>
-            <Text style={s.sheetBody}>{"Most households manage 4-6 irregular expenses. Add another bucket to get the complete picture."}</Text>
-            <Pressable
-              style={({ pressed }) => [s.sheetCta, pressed && s.ctaPressed]}
-              onPress={handleAddBucket}
-              accessibilityLabel="Add Bucket"
-              accessibilityHint="Add another bucket to your dashboard"
-            >
-              <Plus size={18} color={colors.textOnPrimary} />
-              <Text style={s.sheetCtaText}>Add Bucket</Text>
+        <View style={s.overlay}>
+          <View style={s.sheet}>
+            <Text style={s.sheetTitle}>Want to track more?</Text>
+            <Text style={s.sheetSub}>Create a free account to add unlimited buckets and never miss a payment.</Text>
+            <Pressable style={s.sheetCta} onPress={handleAddBucket}>
+              <Plus size={18} color="#fff" />
+              <Text style={s.sheetCtaText}>Add Another Bucket</Text>
             </Pressable>
-            <Pressable
-              style={s.sheetDismiss}
-              onPress={handleDismissSheet}
-              accessibilityLabel="Maybe later"
-              accessibilityHint="Dismiss and continue to account creation"
-            >
-              <Text style={s.sheetDismissText}>Maybe later</Text>
+            <Pressable style={s.sheetSkip} onPress={handleDismissSheet}>
+              <Text style={s.sheetSkipText}>No thanks, continue</Text>
             </Pressable>
-          </Animated.View>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </SafeAreaView>
   );
 }
 
-const styles = (colors: ReturnType<typeof useThemeColors>) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background, paddingHorizontal: 24 },
-  header: { paddingTop: 12, gap: 8 },
-  backBtn: { paddingVertical: 8, minHeight: 44 },
-  backText: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.primary },
-  progress: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
-  dotDone: { backgroundColor: colors.primary },
-  stepLabel: { fontSize: 12, fontFamily: 'Inter_400Regular', color: colors.textMuted, textAlign: 'center' },
-  content: { flex: 1, paddingTop: 28, gap: 16 },
-  title: { fontSize: 28, fontFamily: 'Inter_700Bold', color: colors.text, letterSpacing: -0.5 },
-  sub: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary, lineHeight: 22 },
-  card: { backgroundColor: colors.surface, borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: colors.border },
-  cardIcon: { width: 48, height: 48, borderRadius: 14, backgroundColor: colors.primaryMuted, justifyContent: 'center', alignItems: 'center' },
-  cardInfo: { flex: 1, gap: 2 },
-  cardName: { fontSize: 16, fontFamily: 'Inter_600SemiBold', color: colors.text },
-  cardSub: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textMuted },
-  cardAmount: { alignItems: 'flex-end' },
-  amountNum: { fontSize: 20, fontFamily: 'Inter_700Bold', color: colors.primary },
-  amountUnit: { fontSize: 12, fontFamily: 'Inter_400Regular', color: colors.textMuted },
-  totalCard: { backgroundColor: colors.primaryMuted, borderRadius: 16, padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  totalLabel: { fontSize: 15, fontFamily: 'Inter_600SemiBold', color: colors.primary },
-  totalAmount: { fontSize: 28, fontFamily: 'Inter_700Bold', color: colors.primary },
-  nudge: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textMuted, lineHeight: 20, textAlign: 'center' },
-  cta: { backgroundColor: colors.primary, borderRadius: 16, paddingVertical: 18, alignItems: 'center', marginBottom: 16 },
-  ctaPressed: { opacity: 0.85 },
-  ctaText: { fontSize: 17, fontFamily: 'Inter_600SemiBold', color: colors.textOnPrimary },
-  overlay: { flex: 1, backgroundColor: colors.shadow, justifyContent: 'flex-end' },
-  sheet: { backgroundColor: colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 28, gap: 16, paddingBottom: 40 },
-  sheetHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: 'center', marginBottom: 8 },
-  sheetTitle: { fontSize: 22, fontFamily: 'Inter_700Bold', color: colors.text },
-  sheetBody: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary, lineHeight: 22 },
-  sheetCta: { backgroundColor: colors.primary, borderRadius: 14, paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  sheetCtaText: { fontSize: 16, fontFamily: 'Inter_600SemiBold', color: colors.textOnPrimary },
-  sheetDismiss: { alignItems: 'center', paddingVertical: 12, minHeight: 44 },
-  sheetDismissText: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.textSecondary },
-});
+function styles(colors: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, justifyContent: 'space-between' },
+    backBtn: { padding: 8 },
+    backText: { fontSize: 15, color: colors.primary, fontFamily: 'Inter_500Medium' },
+    progress: { flexDirection: 'row', gap: 6 },
+    dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
+    dotDone: { backgroundColor: colors.primary },
+    stepLabel: { fontSize: 13, color: colors.textSecondary, fontFamily: 'Inter_400Regular' },
+    content: { flex: 1, paddingHorizontal: 24, paddingTop: 24 },
+    title: { fontSize: 26, fontFamily: 'PlusJakartaSans_700Bold', color: colors.text, marginBottom: 8 },
+    sub: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary, marginBottom: 24 },
+    card: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: colors.border, marginBottom: 12 },
+    cardIcon: { width: 48, height: 48, borderRadius: 12, backgroundColor: colors.primaryMuted, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+    cardInfo: { flex: 1 },
+    cardName: { fontSize: 16, fontFamily: 'Inter_600SemiBold', color: colors.text },
+    cardSub: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textSecondary, marginTop: 2 },
+    cardAmount: { alignItems: 'flex-end' },
+    amountNum: { fontSize: 20, fontFamily: 'PlusJakartaSans_700Bold', color: colors.text },
+    amountUnit: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textSecondary },
+    totalCard: { backgroundColor: colors.primaryMuted, borderRadius: 16, padding: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+    totalLabel: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.primary },
+    totalAmount: { fontSize: 22, fontFamily: 'PlusJakartaSans_700Bold', color: colors.primary },
+    nudge: { fontSize: 14, fontFamily: 'Inter_400Regular', color: colors.textSecondary, textAlign: 'center', paddingHorizontal: 8 },
+    cta: { marginHorizontal: 24, marginBottom: 16, backgroundColor: colors.primary, borderRadius: 14, paddingVertical: 16, alignItems: 'center' },
+    ctaPressed: { opacity: 0.85 },
+    ctaText: { fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold', color: '#fff' },
+    overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+    sheet: { backgroundColor: colors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 },
+    sheetTitle: { fontSize: 22, fontFamily: 'PlusJakartaSans_700Bold', color: colors.text, marginBottom: 8 },
+    sheetSub: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary, marginBottom: 24 },
+    sheetCta: { backgroundColor: colors.primary, borderRadius: 14, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, marginBottom: 12 },
+    sheetCtaText: { fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold', color: '#fff' },
+    sheetSkip: { alignItems: 'center', paddingVertical: 12 },
+    sheetSkipText: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.textSecondary },
+  });
+}

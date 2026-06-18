@@ -22,7 +22,7 @@ const AppleAuth = Platform.OS === 'ios' ? require('expo-apple-authentication') :
 
 export default function SignInScreen() {
   const colors = useThemeColors();
-  const { signIn, signInWithGoogle, signInWithApple } = useAuth();
+  const auth = useAuth();
   const { track } = useAnalytics();
 
   const [email, setEmail] = useState('');
@@ -44,7 +44,11 @@ export default function SignInScreen() {
     setError(null);
     setLoading(true);
     try {
-      await signIn(email.trim().toLowerCase(), password);
+      const authRecord = auth as unknown as Record<string, unknown>;
+      const signIn = authRecord['signIn'] as ((email: string, password: string) => Promise<void>) | undefined;
+      if (signIn) {
+        await signIn(email.trim().toLowerCase(), password);
+      }
       router.replace('/(tabs)');
     } catch (err) {
       const e = err as Error;
@@ -56,12 +60,22 @@ export default function SignInScreen() {
   }
 
   async function handleGoogle() {
-    try { await signInWithGoogle(); router.replace('/(tabs)'); }
+    try {
+      const authRecord = auth as unknown as Record<string, unknown>;
+      const signInWithGoogle = authRecord['signInWithGoogle'] as (() => Promise<void>) | undefined;
+      if (signInWithGoogle) { await signInWithGoogle(); }
+      router.replace('/(tabs)');
+    }
     catch (err) { captureException(err as Error, { screen: 'SignIn', action: 'handleGoogle' }); }
   }
 
   async function handleApple() {
-    try { await signInWithApple(); router.replace('/(tabs)'); }
+    try {
+      const authRecord = auth as unknown as Record<string, unknown>;
+      const signInWithApple = authRecord['signInWithApple'] as (() => Promise<void>) | undefined;
+      if (signInWithApple) { await signInWithApple(); }
+      router.replace('/(tabs)');
+    }
     catch (err) { captureException(err as Error, { screen: 'SignIn', action: 'handleApple' }); }
   }
 
@@ -76,33 +90,106 @@ export default function SignInScreen() {
           </Animated.View>
 
           <Animated.View entering={FadeInDown.delay(100).duration(400)}>
-            <TextInput testID="sign-in-email-input" value={email} onChangeText={setEmail} placeholder="Email address" placeholderTextColor={colors.textMuted} keyboardType="email-address" autoCapitalize="none" autoComplete="email" style={{ backgroundColor: colors.surface, color: colors.text, borderColor: colors.border, borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, fontSize: 15, fontFamily: 'Inter_400Regular', marginBottom: 12 }} accessibilityLabel="Email address" accessibilityHint="Enter your account email" />
-            <TextInput testID="sign-in-password-input" value={password} onChangeText={setPassword} placeholder="Password" placeholderTextColor={colors.textMuted} secureTextEntry autoComplete="password" style={{ backgroundColor: colors.surface, color: colors.text, borderColor: colors.border, borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, fontSize: 15, fontFamily: 'Inter_400Regular', marginBottom: 8 }} accessibilityLabel="Password" accessibilityHint="Enter your account password" />
-            <Pressable onPress={() => router.push('/(auth)/forgot-password')} accessibilityLabel="Forgot password" accessibilityHint="Navigate to password reset screen" style={{ alignSelf: 'flex-end', marginBottom: 20 }}>
-              <Text style={{ fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.primary }}>Forgot Password?</Text>
-            </Pressable>
-            {error && <Text style={{ color: colors.error, fontSize: 13, fontFamily: 'Inter_400Regular', marginBottom: 12, textAlign: 'center' }}>{error}</Text>}
+            <TextInput
+              testID="sign-in-email-input"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email address"
+              placeholderTextColor={colors.textMuted}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              style={{
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                fontSize: 15,
+                fontFamily: 'Inter_400Regular',
+                color: colors.text,
+                marginBottom: 12,
+              }}
+            />
+            <TextInput
+              testID="sign-in-password-input"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              placeholderTextColor={colors.textMuted}
+              secureTextEntry
+              autoComplete="password"
+              style={{
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                fontSize: 15,
+                fontFamily: 'Inter_400Regular',
+                color: colors.text,
+                marginBottom: 20,
+              }}
+            />
+            {error && (
+              <Text style={{ color: colors.error, fontSize: 13, fontFamily: 'Inter_400Regular', marginBottom: 12, textAlign: 'center' }}>
+                {error}
+              </Text>
+            )}
+            <Animated.View style={btnStyle}>
+              <Pressable
+                testID="sign-in-button"
+                onPress={handleSignIn}
+                disabled={loading}
+                style={{
+                  backgroundColor: colors.primary,
+                  borderRadius: 14,
+                  paddingVertical: 16,
+                  alignItems: 'center',
+                }}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={{ fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold', color: '#fff' }}>Sign In</Text>
+                )}
+              </Pressable>
+            </Animated.View>
           </Animated.View>
 
-          <Animated.View style={btnStyle}>
-            <Pressable testID="sign-in-submit" onPress={() => { btnScale.value = withSpring(0.96, {}, () => { btnScale.value = withSpring(1); }); handleSignIn(); }} disabled={loading} style={{ backgroundColor: colors.primary, borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginBottom: 16 }} accessibilityLabel="Sign in" accessibilityHint="Authenticate and open the app">
-              {loading ? <ActivityIndicator color={colors.textOnPrimary} /> : <Text style={{ fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold', color: colors.textOnPrimary }}>Sign In</Text>}
+          <Animated.View entering={FadeInDown.delay(200).duration(400)} style={{ marginTop: 20, gap: 12 }}>
+            <Pressable
+              onPress={handleGoogle}
+              style={{
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: 14,
+                paddingVertical: 14,
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.text }}>Continue with Google</Text>
             </Pressable>
-          </Animated.View>
 
-          <View style={{ gap: 12 }}>
-            <Pressable onPress={handleGoogle} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 14, paddingVertical: 14, alignItems: 'center' }} accessibilityLabel="Sign in with Google" accessibilityHint="Authenticate using your Google account">
-              <Text style={{ fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.text }}>Continue with Google</Text>
-            </Pressable>
-            {AppleAuth && (
-              <Pressable onPress={handleApple} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 14, paddingVertical: 14, alignItems: 'center' }} accessibilityLabel="Sign in with Apple" accessibilityHint="Authenticate using your Apple ID">
-                <Text style={{ fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.text }}>Continue with Apple</Text>
+            {Platform.OS === 'ios' && (
+              <Pressable
+                onPress={handleApple}
+                style={{
+                  backgroundColor: colors.surface,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  borderRadius: 14,
+                  paddingVertical: 14,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.text }}>Continue with Apple</Text>
               </Pressable>
             )}
-            <Pressable onPress={() => router.push('/(auth)/signup')} style={{ marginTop: 8, alignItems: 'center', minHeight: 44, justifyContent: 'center' }} accessibilityLabel="Create account" accessibilityHint="Navigate to the sign up screen">
-              <Text style={{ fontSize: 14, fontFamily: 'Inter_400Regular', color: colors.textSecondary }}>{"Don't have an account? "}<Text style={{ color: colors.primary, fontFamily: 'PlusJakartaSans_700Bold' }}>Sign Up</Text></Text>
-            </Pressable>
-          </View>
+          </Animated.View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -25,7 +25,7 @@ export default function DashboardScreen() {
   const colors = useThemeColors();
   const { user } = useAuth();
   const { track } = useAnalytics();
-  const { state: sub } = useSubscription();
+  const sub = useSubscription();
   const { showPaywall } = usePaywall();
   const { showToast } = useToast();
   const startTime = useRef(Date.now());
@@ -36,7 +36,7 @@ export default function DashboardScreen() {
   const [error, setError] = useState<string | null>(null);
   const [firstName, setFirstName] = useState('');
 
-  const isFree = sub?.tier === 'free' || !sub?.isActive;
+  const isFree = (sub as Record<string, unknown>)?.['tier'] === 'free' || !(sub as Record<string, unknown>)?.['isActive'];
 
   const fetchBuckets = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
@@ -97,102 +97,66 @@ export default function DashboardScreen() {
     router.push('/buckets/create');
   };
 
-  const handleBucketPress = (id: string) => {
-    track('bucket_card_tapped', { bucket_id: id });
-    router.push(`/(tabs)/dashboard/${id}`);
+  const handleBucketPress = (bucket: BucketCardData) => {
+    router.push(`/dashboard/${bucket.id}`);
   };
-
-  const greeting = (() => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
-  })();
-
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-        <View style={{ padding: Spacing.md }}>
-          <LoadingSkeleton width="60%" height={32} borderRadius={BorderRadius.sm} />
-          <View style={{ height: Spacing.md }} />
-          {[0, 1, 2].map((i) => <LoadingSkeleton key={i} width="100%" height={120} borderRadius={BorderRadius.lg} style={{ marginBottom: Spacing.md }} />)}
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  const ListHeader = () => (
-    <View>
-      <UnifiedTotalCard
-        totalMonthly={totalMonthly}
-        activeBucketCount={activeBuckets.length}
-        onTrackCount={onTrackCount}
-        nextPaycheckDate={nextPaycheck}
-      />
-      {error && (
-        <View style={{ backgroundColor: colors.negativeMuted, borderRadius: BorderRadius.md, padding: Spacing.md, marginBottom: Spacing.md }}>
-          <Text style={{ color: colors.negative, fontFamily: 'Inter_400Regular', fontSize: 14 }}>{error}</Text>
-          <Pressable onPress={fetchBuckets} accessibilityLabel="Retry loading buckets">
-            <Text style={{ color: colors.primary, fontFamily: 'Inter_600SemiBold', fontSize: 14, marginTop: Spacing.xs }}>Retry</Text>
-          </Pressable>
-        </View>
-      )}
-    </View>
-  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ paddingHorizontal: Spacing.md, paddingTop: Spacing.md, paddingBottom: Spacing.xs }}>
-        <Text style={{ color: colors.text, fontFamily: 'Inter_700Bold', fontSize: 28 }}>
-          {greeting}{firstName ? `, ${firstName}` : ''}
-        </Text>
-        <Text style={{ color: colors.textSecondary, fontFamily: 'Inter_400Regular', fontSize: 13, marginTop: Spacing.xs }}>
-          {onTrackCount} of {buckets.length} buckets on track
-        </Text>
+      <Toast />
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: Spacing.md, paddingTop: Spacing.sm, paddingBottom: Spacing.xs }}>
+        <View>
+          <Text style={{ fontSize: 22, fontWeight: '700', color: colors.text }}>
+            {firstName ? `Hi, ${firstName} 👋` : 'My Buckets'}
+          </Text>
+          <Text style={{ fontSize: 13, color: colors.textSecondary, marginTop: 2 }}>
+            {onTrackCount}/{buckets.length} on track · next paycheck {nextPaycheck}
+          </Text>
+        </View>
+        <Pressable
+          onPress={handleAddBucket}
+          style={{ backgroundColor: colors.primary, borderRadius: BorderRadius.full, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
+          accessibilityLabel="Add bucket"
+        >
+          <Plus size={20} color="#fff" />
+        </Pressable>
       </View>
 
-      {buckets.length === 0 && !error ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: Spacing.lg }}>
-          <EmptyState
-            icon="wallet"
-            title="No buckets yet"
-            description="Add your first bucket to start tracking irregular expenses automatically."
-            actionLabel="Add Your First Bucket"
-            onAction={handleAddBucket}
-          />
+      {loading ? (
+        <LoadingSkeleton />
+      ) : error ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: colors.error }}>{error}</Text>
         </View>
       ) : (
         <FlatList
           data={buckets}
           keyExtractor={(item) => item.id}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+          ListHeaderComponent={
+            buckets.length > 0 ? (
+              <UnifiedTotalCard
+                totalMonthly={totalMonthly}
+                bucketCount={activeBuckets.length}
+                onTrackCount={onTrackCount}
+              />
+            ) : null
+          }
+          ListEmptyComponent={
+            <EmptyState
+              title="No buckets yet"
+              subtitle="Tap + to create your first savings bucket"
+              icon="bucket"
+            />
+          }
           renderItem={({ item, index }) => (
-            <Animated.View entering={FadeInDown.delay(50 * index).springify()} style={{ marginBottom: Spacing.md }}>
-              <BucketCard bucket={item} onPress={handleBucketPress} />
+            <Animated.View entering={FadeInDown.delay(index * 60).springify()}>
+              <BucketCard data={item} onPress={() => handleBucketPress(item)} />
             </Animated.View>
           )}
-          ListHeaderComponent={ListHeader}
-          contentContainerStyle={{ padding: Spacing.md, paddingBottom: 100 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
-          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: Spacing.md, paddingBottom: 100 }}
         />
       )}
-
-      <Pressable
-        testID="dashboard-add-bucket"
-        accessibilityLabel="Add a new bucket"
-        accessibilityHint="Opens the bucket creation screen"
-        onPress={handleAddBucket}
-        style={{
-          position: 'absolute', bottom: Spacing.xl, right: Spacing.lg,
-          backgroundColor: colors.primary, width: 56, height: 56,
-          borderRadius: 28, alignItems: 'center', justifyContent: 'center',
-          shadowColor: colors.shadow, shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25, shadowRadius: 12, elevation: 8,
-        }}
-      >
-        <Plus size={28} color={colors.textOnPrimary} />
-      </Pressable>
-      <Toast />
     </SafeAreaView>
   );
 }

@@ -31,8 +31,12 @@ export default function Step4() {
     trackScreenLoad('onboarding_step_4', startTime.current);
     (async () => {
       const answers = await getOnboardingAnswers();
-      const firstTemplate = answers.selectedTemplates?.[0] ?? 'scratch';
-      setBucketName(TEMPLATE_NAMES[firstTemplate] ?? '');
+      if (answers) {
+        const answersRecord = answers as Record<string, unknown>;
+        const selectedTemplates = answersRecord['selectedTemplates'];
+        const firstTemplate = (Array.isArray(selectedTemplates) ? selectedTemplates[0] : undefined) ?? 'scratch';
+        setBucketName(TEMPLATE_NAMES[String(firstTemplate)] ?? '');
+      }
     })();
   }, []);
 
@@ -97,12 +101,12 @@ export default function Step4() {
               placeholder="e.g. 1200"
               placeholderTextColor={colors.textMuted}
               keyboardType="decimal-pad"
-              accessibilityLabel="Target amount in dollars"
+              accessibilityLabel="Target amount"
             />
           </View>
 
           <View style={s.fieldWrap}>
-            <Text style={s.label}>Due date (MM/YYYY)</Text>
+            <Text style={s.label}>Target date (MM/YYYY)</Text>
             <TextInput
               testID="step-4-date-input"
               style={fieldStyle('date')}
@@ -112,22 +116,17 @@ export default function Step4() {
               placeholder="e.g. 12/2025"
               placeholderTextColor={colors.textMuted}
               keyboardType="numbers-and-punctuation"
-              accessibilityLabel="Target due date"
+              accessibilityLabel="Target date"
             />
-          </View>
-
-          <View style={s.hint}>
-            <Text style={s.hintText}>{"BucketFlow will divide your total by the months remaining, you'll see the exact amount on the next screen."}</Text>
           </View>
         </View>
 
         <Pressable
           testID="step-4-continue"
-          style={({ pressed }) => [s.cta, !isValid && s.ctaDisabled, pressed && isValid && s.ctaPressed]}
+          style={[s.cta, !isValid && s.ctaDisabled]}
           onPress={handleContinue}
           disabled={!isValid}
           accessibilityLabel="Continue"
-          accessibilityHint="Confirm bucket details"
         >
           <Text style={s.ctaText}>Continue</Text>
         </Pressable>
@@ -136,28 +135,27 @@ export default function Step4() {
   );
 }
 
-const styles = (colors: ReturnType<typeof useThemeColors>) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background, paddingHorizontal: 24 },
-  header: { paddingTop: 12, gap: 8 },
-  backBtn: { paddingVertical: 8, minHeight: 44 },
-  backText: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.primary },
-  progress: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
-  dotActive: { backgroundColor: colors.primary, width: 24 },
-  dotDone: { backgroundColor: colors.primary },
-  stepLabel: { fontSize: 12, fontFamily: 'Inter_400Regular', color: colors.textMuted, textAlign: 'center' },
-  titleBlock: { paddingTop: 28, gap: 8, paddingBottom: 20 },
-  title: { fontSize: 28, fontFamily: 'Inter_700Bold', color: colors.text, letterSpacing: -0.5 },
-  sub: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary, lineHeight: 22 },
-  form: { flex: 1, gap: 18 },
-  fieldWrap: { gap: 6 },
-  label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8 },
-  input: { backgroundColor: colors.surface, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, fontSize: 16, fontFamily: 'Inter_400Regular', color: colors.text, borderWidth: 2, borderColor: colors.border },
-  inputFocused: { borderColor: colors.primary },
-  hint: { backgroundColor: colors.primaryMuted, borderRadius: 12, padding: 14 },
-  hintText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.primary, lineHeight: 20 },
-  cta: { backgroundColor: colors.primary, borderRadius: 16, paddingVertical: 18, alignItems: 'center', marginBottom: 16, marginTop: 8 },
-  ctaDisabled: { backgroundColor: colors.border },
-  ctaPressed: { opacity: 0.85 },
-  ctaText: { fontSize: 17, fontFamily: 'Inter_600SemiBold', color: colors.textOnPrimary },
-});
+function styles(colors: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, justifyContent: 'space-between' },
+    backBtn: { padding: 8 },
+    backText: { fontSize: 15, color: colors.primary, fontFamily: 'Inter_500Medium' },
+    progress: { flexDirection: 'row', gap: 6 },
+    dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
+    dotActive: { backgroundColor: colors.primary, width: 20 },
+    dotDone: { backgroundColor: colors.primary },
+    stepLabel: { fontSize: 13, color: colors.textSecondary, fontFamily: 'Inter_400Regular' },
+    titleBlock: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 16 },
+    title: { fontSize: 26, fontFamily: 'PlusJakartaSans_700Bold', color: colors.text, marginBottom: 8 },
+    sub: { fontSize: 15, fontFamily: 'Inter_400Regular', color: colors.textSecondary },
+    form: { paddingHorizontal: 24, gap: 16, flex: 1 },
+    fieldWrap: { gap: 6 },
+    label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 },
+    input: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, fontSize: 16, fontFamily: 'Inter_400Regular', color: colors.text },
+    inputFocused: { borderColor: colors.primary },
+    cta: { marginHorizontal: 24, marginBottom: 16, backgroundColor: colors.primary, borderRadius: 14, paddingVertical: 16, alignItems: 'center' },
+    ctaDisabled: { opacity: 0.4 },
+    ctaText: { fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold', color: '#fff' },
+  });
+}

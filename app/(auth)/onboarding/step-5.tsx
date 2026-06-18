@@ -41,12 +41,15 @@ export default function Step5() {
     trackScreenLoad('onboarding_step_5', startTime.current);
     (async () => {
       const answers = await getOnboardingAnswers();
-      const name = answers.bucketName ?? 'Your Bucket';
-      const amount = answers.targetAmount ?? '0';
-      const date = answers.targetDate ?? '';
-      setBucketName(name);
-      setTargetDate(date);
-      setMonthly(calcMonthly(amount, date));
+      if (answers) {
+        const answersRecord = answers as Record<string, unknown>;
+        const name = (answersRecord['bucketName'] as string | undefined) ?? 'Your Bucket';
+        const amount = (answersRecord['targetAmount'] as string | undefined) ?? '0';
+        const date = (answersRecord['targetDate'] as string | undefined) ?? '';
+        setBucketName(name);
+        setTargetDate(date);
+        setMonthly(calcMonthly(amount, date));
+      }
     })();
   }, []);
 
@@ -77,7 +80,7 @@ export default function Step5() {
         <Text style={s.heroAmount}>${(monthly ?? 0).toFixed(0)}<Text style={s.heroUnit}> / mo</Text></Text>
         <Text style={s.heroSub}>{bucketName}{targetDate ? ` · Due ${targetDate}` : ''}</Text>
         <View style={s.ringWrap}>
-          <ScoreRing score={0} size={90} strokeWidth={8} />
+          <ScoreRing score={0} size={80} strokeWidth={8} />
           <Text style={s.ringLabel}>0% saved</Text>
         </View>
         <Text style={s.confettiLine}>🎉 Your first bucket is ready!</Text>
@@ -94,51 +97,56 @@ export default function Step5() {
               accessibilityLabel={label}
               accessibilityHint={`Set paycheck frequency to ${label}`}
             >
-              <Text style={[s.freqLabel, frequency === id && s.freqLabelActive]}>{label}</Text>
+              <Text style={[s.freqChipText, frequency === id && s.freqChipTextActive]}>{label}</Text>
             </Pressable>
           ))}
         </View>
       </View>
 
-      <Pressable
-        testID="step-5-continue"
-        style={({ pressed }) => [s.cta, pressed && s.ctaPressed]}
-        onPress={handleContinue}
-        accessibilityLabel="Continue"
-        accessibilityHint="Confirm paycheck frequency and continue"
-      >
-        <Text style={s.ctaText}>Continue</Text>
-      </Pressable>
+      <View style={s.footer}>
+        <Pressable style={s.cta} onPress={handleContinue} accessibilityLabel="Continue">
+          <Text style={s.ctaText}>Continue →</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
 
-const styles = (colors: ReturnType<typeof useThemeColors>) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background, paddingHorizontal: 24 },
-  header: { paddingTop: 12, gap: 8 },
-  backBtn: { paddingVertical: 8, minHeight: 44 },
-  backText: { fontSize: 15, fontFamily: 'Inter_500Medium', color: colors.primary },
-  progress: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
-  dotActive: { backgroundColor: colors.primary, width: 24 },
-  dotDone: { backgroundColor: colors.primary },
-  stepLabel: { fontSize: 12, fontFamily: 'Inter_400Regular', color: colors.textMuted, textAlign: 'center' },
-  hero: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  heroLabel: { fontSize: 18, fontFamily: 'Inter_500Medium', color: colors.textSecondary },
-  heroAmount: { fontSize: 56, fontFamily: 'Inter_700Bold', color: colors.primary, letterSpacing: -2 },
-  heroUnit: { fontSize: 24, fontFamily: 'Inter_500Medium', color: colors.primary },
-  heroSub: { fontSize: 14, fontFamily: 'Inter_400Regular', color: colors.textMuted },
-  ringWrap: { alignItems: 'center', gap: 6, marginTop: 8 },
-  ringLabel: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textMuted },
-  confettiLine: { fontSize: 16, fontFamily: 'Inter_600SemiBold', color: colors.text, marginTop: 8 },
-  freqBlock: { gap: 12, paddingBottom: 8 },
-  freqTitle: { fontSize: 15, fontFamily: 'Inter_600SemiBold', color: colors.text },
-  freqRow: { flexDirection: 'row', gap: 10 },
-  freqChip: { flex: 1, paddingVertical: 12, borderRadius: 12, borderWidth: 2, borderColor: colors.border, alignItems: 'center' },
-  freqChipActive: { borderColor: colors.primary, backgroundColor: colors.primaryMuted },
-  freqLabel: { fontSize: 14, fontFamily: 'Inter_500Medium', color: colors.textSecondary },
-  freqLabelActive: { color: colors.primary },
-  cta: { backgroundColor: colors.primary, borderRadius: 16, paddingVertical: 18, alignItems: 'center', marginBottom: 16, marginTop: 12 },
-  ctaPressed: { opacity: 0.85 },
-  ctaText: { fontSize: 17, fontFamily: 'Inter_600SemiBold', color: colors.textOnPrimary },
-});
+function styles(colors: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    header: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 },
+    backBtn: { paddingVertical: 4 },
+    backText: { color: colors.textSecondary, fontSize: 16 },
+    progress: { flexDirection: 'row', gap: 6, marginTop: 12, alignSelf: 'center' },
+    dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
+    dotActive: { backgroundColor: colors.primary, width: 20 },
+    dotDone: { backgroundColor: colors.primary },
+    stepLabel: { textAlign: 'center', color: colors.textSecondary, fontSize: 13, marginTop: 6 },
+    hero: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
+    heroLabel: { fontSize: 16, color: colors.textSecondary, marginBottom: 4 },
+    heroAmount: { fontSize: 48, fontWeight: '700', color: colors.text },
+    heroUnit: { fontSize: 20, color: colors.textSecondary },
+    heroSub: { fontSize: 14, color: colors.textSecondary, marginTop: 4 },
+    ringWrap: { marginTop: 24, alignItems: 'center' },
+    ringLabel: { marginTop: 8, fontSize: 14, color: colors.textSecondary },
+    confettiLine: { marginTop: 16, fontSize: 16, color: colors.text },
+    freqBlock: { paddingHorizontal: 24, paddingBottom: 16 },
+    freqTitle: { fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12 },
+    freqRow: { flexDirection: 'row', gap: 8 },
+    freqChip: {
+      flex: 1, paddingVertical: 10, borderRadius: 8,
+      borderWidth: 1.5, borderColor: colors.border,
+      alignItems: 'center', backgroundColor: colors.surface,
+    },
+    freqChipActive: { borderColor: colors.primary, backgroundColor: colors.primaryMuted },
+    freqChipText: { fontSize: 14, color: colors.textSecondary },
+    freqChipTextActive: { color: colors.primary, fontWeight: '600' },
+    footer: { paddingHorizontal: 24, paddingBottom: 32 },
+    cta: {
+      backgroundColor: colors.primary, borderRadius: 12,
+      paddingVertical: 16, alignItems: 'center',
+    },
+    ctaText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  });
+}
