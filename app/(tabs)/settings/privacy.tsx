@@ -16,7 +16,7 @@ const SECTIONS = [
   },
   {
     title: 'How We Use Your Information',
-    body: "Your information is used to provide and improve Buckets, send you notifications you have opted into, and personalise your savings experience. We do not sell your personal data.",
+    body: "Your information is used to provide and improve Buckets Pro, send you notifications you have opted into, and personalise your savings experience. We do not sell your personal data.",
   },
   {
     title: 'Data Storage & Security',
@@ -82,7 +82,7 @@ export default function PrivacyPolicyScreen() {
         <Pressable
           onPress={handleOpenBrowser}
           accessibilityLabel="Open full privacy policy in browser"
-          accessibilityHint="Opens the complete privacy policy on the Buckets website"
+          accessibilityHint="Opens the complete privacy policy on the Buckets Pro website"
           testID="privacy-open-browser"
           style={({ pressed }) => ({
             flexDirection: 'row',

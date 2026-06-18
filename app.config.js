@@ -10,7 +10,7 @@
 
 const config = {
   app: {
-    name: "Buckets",
+    name: "Buckets Pro",
     slug: "buckets",
     scheme: "buckets",
     version: "1.0.0",

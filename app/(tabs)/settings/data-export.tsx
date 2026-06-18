@@ -120,7 +120,7 @@ export default function DataExportScreen() {
         <Animated.View entering={FadeInDown.duration(320).springify()} style={{ gap: Spacing.md }}>
 
           <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 15, color: colors.textSecondary, lineHeight: 22 }}>
-            Download all your buckets and contribution history. No bank data is included, only the entries you created in BucketFlow.
+            Download all your buckets and contribution history. No bank data is included, only the entries you created in Buckets Pro.
           </Text>
 
           {lastExport && (

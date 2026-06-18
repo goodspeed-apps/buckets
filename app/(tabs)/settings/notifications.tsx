@@ -109,8 +109,8 @@ export default function NotificationsScreen() {
     if (permStatus !== 'granted') { await requestPermission(); return; }
     try {
       await scheduleLocalNotification(
-        'BucketFlow Reminder',
-        'This is your test notification from BucketFlow!',
+        'Buckets Pro Reminder',
+        'This is your test notification from Buckets Pro!',
         null,
       );
       track('test_notification_sent');

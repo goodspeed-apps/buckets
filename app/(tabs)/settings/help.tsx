@@ -29,7 +29,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'math',
     question: "How is my monthly set-aside calculated?",
-    answer: "BucketFlow takes your target amount, subtracts what you've already saved, then divides the remaining amount by the number of months until your target date. That gives you exactly how much to move this month, no spreadsheet required.",
+    answer: "Buckets Pro takes your target amount, subtracts what you've already saved, then divides the remaining amount by the number of months until your target date. That gives you exactly how much to move this month, no spreadsheet required.",
   },
   {
     id: 'trial',
@@ -44,7 +44,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'bank',
     question: "Can I link my bank account?",
-    answer: "Not in V1, BucketFlow is intentionally a manual tracking tool. Bank sync is planned for a future Buckets Sync tier. Manual entry keeps you in control and avoids the privacy concerns of credential-sharing.",
+    answer: "Not in V1, Buckets Pro is intentionally a manual tracking tool. Bank sync is planned for a future Buckets Sync tier. Manual entry keeps you in control and avoids the privacy concerns of credential-sharing.",
   },
   {
     id: 'export',
@@ -80,14 +80,14 @@ export default function HelpScreen() {
 
   const handleEmail = () => {
     track('contact_support_tapped');
-    Linking.openURL('mailto:support@bucketflow.app?subject=BucketFlow Support').catch(err =>
+    Linking.openURL('mailto:support@bucketflow.app?subject=Buckets Pro Support').catch(err =>
       captureException(err instanceof Error ? err : new Error(String(err)), { screen: 'help', action: 'email' })
     );
   };
 
   const handleFeedback = () => {
     track('send_feedback_tapped');
-    Linking.openURL('mailto:feedback@bucketflow.app?subject=BucketFlow Feedback').catch(err =>
+    Linking.openURL('mailto:feedback@bucketflow.app?subject=Buckets Pro Feedback').catch(err =>
       captureException(err instanceof Error ? err : new Error(String(err)), { screen: 'help', action: 'feedback' })
     );
   };
@@ -195,7 +195,7 @@ export default function HelpScreen() {
             />
             <SupportRow
               icon={<Star size={20} color={colors.warning} />}
-              label="Rate BucketFlow"
+              label="Rate Buckets Pro"
               onPress={handleRate}
               showDivider={false}
               colors={colors}

@@ -72,7 +72,7 @@ export default function Step4() {
 
         <Animated.View entering={FadeInDown.duration(400)} style={s.titleBlock}>
           <Text style={s.title}>Build your first bucket</Text>
-          <Text style={s.sub}>Fill in the details, BucketFlow does the monthly math for you.</Text>
+          <Text style={s.sub}>Fill in the details, Buckets Pro does the monthly math for you.</Text>
         </Animated.View>
 
         <View style={s.form}>

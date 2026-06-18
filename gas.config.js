@@ -10,7 +10,7 @@
 
 const gasConfig = {
   app: {
-    name: "Buckets",
+    name: "Buckets Pro",
     slug: "buckets",
     description: "Replace your sinking fund spreadsheet with a calculator that tells you one number: exactly how much to move this month across every irregular expense, with zero manual math.",
     scheme: "buckets",

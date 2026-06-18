@@ -14,11 +14,11 @@ const LAST_UPDATED = 'January 15, 2025';
 const SECTIONS = [
   {
     title: 'Acceptance of Terms',
-    body: "By accessing or using Buckets, you agree to be bound by these Terms of Service. If you do not agree, please discontinue use of the application.",
+    body: "By accessing or using Buckets Pro, you agree to be bound by these Terms of Service. If you do not agree, please discontinue use of the application.",
   },
   {
     title: 'Use of Service',
-    body: "Buckets is a personal finance tool designed to help you allocate savings toward specific goals. You are responsible for the accuracy of any financial data you enter.",
+    body: "Buckets Pro is a personal finance tool designed to help you allocate savings toward specific goals. You are responsible for the accuracy of any financial data you enter.",
   },
   {
     title: 'Account Responsibilities',
@@ -34,11 +34,11 @@ const SECTIONS = [
   },
   {
     title: 'Disclaimers',
-    body: "Buckets is not a licensed financial advisor. The app does not provide investment advice. All financial decisions remain your sole responsibility.",
+    body: "Buckets Pro is not a licensed financial advisor. The app does not provide investment advice. All financial decisions remain your sole responsibility.",
   },
   {
     title: 'Limitation of Liability',
-    body: "To the fullest extent permitted by law, Buckets and its affiliates shall not be liable for any indirect, incidental, or consequential damages arising from your use of the service.",
+    body: "To the fullest extent permitted by law, Buckets Pro and its affiliates shall not be liable for any indirect, incidental, or consequential damages arising from your use of the service.",
   },
   {
     title: 'Changes to Terms',
@@ -103,7 +103,7 @@ export default function TermsScreen() {
           <Pressable
             onPress={handleOpenInBrowser}
             accessibilityLabel="Open Terms of Service in browser"
-            accessibilityHint="Opens the full Terms of Service on the Buckets website"
+            accessibilityHint="Opens the full Terms of Service on the Buckets Pro website"
             testID="terms-open-browser"
             style={({ pressed }) => ({
               flexDirection: 'row',
