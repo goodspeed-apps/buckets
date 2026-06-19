@@ -7,7 +7,7 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { trackScreenLoad } from '@/lib/performance';
 
 const LAST_UPDATED = 'June 1, 2025';
-const PRIVACY_URL = 'https://buckets.app/privacy';
+const PRIVACY_URL = 'https://goodspeed.app/privacy';
 
 const SECTIONS = [
   {

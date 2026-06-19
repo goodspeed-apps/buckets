@@ -8,7 +8,7 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { trackScreenLoad } from '@/lib/performance';
 import { captureException } from '@/lib/sentry';
 
-const TERMS_URL = 'https://buckets.app/terms';
+const TERMS_URL = 'https://goodspeed.app/terms';
 const LAST_UPDATED = 'January 15, 2025';
 
 const SECTIONS = [
