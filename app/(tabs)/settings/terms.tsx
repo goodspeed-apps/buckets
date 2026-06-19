@@ -46,7 +46,7 @@ const SECTIONS = [
   },
   {
     title: 'Contact',
-    body: "For questions regarding these Terms of Service, please contact us at legal@buckets.app.",
+    body: "For questions regarding these Terms of Service, please contact us at support@goodspeed.app.",
   },
 ];
 

@@ -80,14 +80,14 @@ export default function HelpScreen() {
 
   const handleEmail = () => {
     track('contact_support_tapped');
-    Linking.openURL('mailto:support@bucketflow.app?subject=Buckets Pro Support').catch(err =>
+    Linking.openURL('mailto:support@goodspeed.app?subject=Buckets Pro Support').catch(err =>
       captureException(err instanceof Error ? err : new Error(String(err)), { screen: 'help', action: 'email' })
     );
   };
 
   const handleFeedback = () => {
     track('send_feedback_tapped');
-    Linking.openURL('mailto:feedback@bucketflow.app?subject=Buckets Pro Feedback').catch(err =>
+    Linking.openURL('mailto:support@goodspeed.app?subject=Buckets Pro Feedback').catch(err =>
       captureException(err instanceof Error ? err : new Error(String(err)), { screen: 'help', action: 'feedback' })
     );
   };

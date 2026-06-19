@@ -28,7 +28,7 @@ const SECTIONS = [
   },
   {
     title: 'Your Rights',
-    body: "You may request access to, correction of, or deletion of your personal data at any time by contacting us at privacy@buckets.app. We will respond within 30 days.",
+    body: "You may request access to, correction of, or deletion of your personal data at any time by contacting us at support@goodspeed.app. We will respond within 30 days.",
   },
   {
     title: 'Cookies & Tracking',
@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     title: 'Contact Us',
-    body: "If you have questions about this policy, please reach out to privacy@buckets.app or visit our website for the full legal document.",
+    body: "If you have questions about this policy, please reach out to support@goodspeed.app or visit our website for the full legal document.",
   },
 ];
 
